@@ -34,6 +34,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     @IBAction func addButtonTapped(_ sender: Any) {
         showAddAlert()
     }
+    
 
     func showAddAlert() {
         let alertController = UIAlertController(title: "Add ToDo", message: nil, preferredStyle: .alert)
@@ -58,10 +59,12 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 
         present(alertController, animated: true, completion: nil)
     }
+    
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return toDoList.count
     }
+    
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoCell", for: indexPath)
@@ -86,6 +89,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 
         return cell
     }
+    
 
     @objc func switchChanged(_ sender: UISwitch) {
         if let cell = sender.superview as? UITableViewCell, let indexPath = tableView.indexPath(for: cell) {
@@ -102,40 +106,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
-    
-    @IBAction func showCompletedList(_ sender: UIButton) {
-        if let completedViewController = storyboard?.instantiateViewController(withIdentifier: "CompletedViewController") as? CompletedViewController {
-            let completedItems = toDoList.filter { $0.isCompleted }
-            completedViewController.completedItems = completedItems
-            navigationController?.pushViewController(completedViewController, animated: true)
-        }
-    }
+
 }
 
-class CompletedViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-    
-    @IBOutlet weak var tableView: UITableView!
-    
-    var completedItems: [ToDoItem] = []
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        tableView.delegate = self
-        tableView.dataSource = self
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return completedItems.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CompletedCell", for: indexPath)
-        
-        let completedItem = completedItems[indexPath.row]
-        
-        cell.textLabel?.text = completedItem.title
-        cell.textLabel?.attributedText = NSAttributedString(string: completedItem.title, attributes: [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue])
-        
-        return cell
-    }
-}
